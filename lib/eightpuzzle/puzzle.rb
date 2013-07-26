@@ -1,9 +1,10 @@
 module EightPuzzle
   class Puzzle
-    attr_reader :state
+    attr_reader :state, :parent
 
-    def initialize(state)
+    def initialize(state, parent=nil)
       @state = state
+      @parent = parent
     end
 
     def to_s
@@ -58,7 +59,7 @@ module EightPuzzle
     def move(direction)
       raise "Impossible move" unless moves.include?(direction)
 
-      Puzzle.new(create_state_from_move_direction(direction))
+      Puzzle.new(create_state_from_move_direction(direction), self)
     end
 
     # Performs an in-place move on self based on the direction

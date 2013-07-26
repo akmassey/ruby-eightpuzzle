@@ -1,0 +1,21 @@
+#! /usr/bin/env ruby -w
+
+require_relative '../lib/eightpuzzle'
+
+puts "Generating a puzzle..."
+
+puzzle = EightPuzzle::PuzzleGenerator.make_puzzle(50)
+bfs = EightPuzzle::BreadthFirstSearcher.new(puzzle)
+dfs = EightPuzzle::DepthFirstSearcher.new(puzzle)
+
+strategies = [ bfs, dfs ]
+
+strategies.each do |strat|
+  solver = EightPuzzle::PuzzleSolver.new(strat)
+  solver.solve
+  solver.print_solution
+
+  puts "next strategy\n\n\n\n"
+end
+
+puts "done"
