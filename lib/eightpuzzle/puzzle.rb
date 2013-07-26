@@ -54,9 +54,25 @@ module EightPuzzle
       possible_moves
     end
 
+    # Returns a new puzzle reprepsenting the state after making a move
     def move(direction)
       raise "Impossible move" unless moves.include?(direction)
 
+      Puzzle.new(create_state_from_move_direction(direction))
+    end
+
+    # Performs an in-place move on self based on the direction
+    def move!(direction)
+      raise "Impossible move" unless moves.include?(direction)
+
+      @state = create_state_from_move_direction(direction)
+
+      self
+    end
+
+    private
+
+    def create_state_from_move_direction(direction)
       new_state = @state.clone
       slider_index = @state.index('*')
 
@@ -75,7 +91,7 @@ module EightPuzzle
         new_state[slider_index + 1] = '*'
       end
 
-      return Puzzle.new(new_state)
+      return new_state
     end
   end
 end

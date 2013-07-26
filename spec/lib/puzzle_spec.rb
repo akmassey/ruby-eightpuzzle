@@ -28,6 +28,14 @@ describe "Puzzle" do
     m.should eq EightPuzzle::Puzzle.new("5674*8321")
   end
 
+  it "should perform an in-place move" do
+    p = EightPuzzle::Puzzle.new("5*7468321")
+    m = p.move!(:down)
+    m.should eq p
+    m.should be p
+    m.should eq EightPuzzle::Puzzle.new("5674*8321")
+  end
+
   context "the slider" do
     it "should be able to move to any position when centered" do
       p = EightPuzzle::Puzzle.new("5674*8321")

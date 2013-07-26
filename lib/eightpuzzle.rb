@@ -1,6 +1,7 @@
 require "eightpuzzle/version"
 require "eightpuzzle/puzzle"
 require "eightpuzzle/moves"
+require "eightpuzzle/puzzle_generator"
 
 require 'set'
 
