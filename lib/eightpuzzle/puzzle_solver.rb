@@ -2,6 +2,7 @@ module EightPuzzle
   class PuzzleSolver
     def initialize(strategy)
       @strategy = strategy
+      @solution = nil
     end
 
     def solve
@@ -10,25 +11,33 @@ module EightPuzzle
       end
     end
 
-    def print_solution
+    def solved?
+      @strategy.solved_puzzle ? true : false
+    end
+
+    def solution
+      return nil unless solved?
+      return @solution if @solution
+
+      str = ""
       solution = []
       puzzle = @strategy.solved_puzzle
 
       while (puzzle)
-        solution << puzzle 
+        solution << puzzle
         puzzle = puzzle.parent
       end
 
       solution.reverse!
 
-      puts "Total Steps: #{solution.count}"
-      puts "Nodes Searched: #{@strategy.nodes_searched}"
-      puts
+      str += "Total Steps: #{solution.count}\n"
+      str += "Nodes Searched: #{@strategy.nodes_searched}\n\n"
 
       solution.each do |state|
-        puts state
-        puts
+        str += "#{state}\n\n"
       end
+
+      @solution = str
     end
   end
 end

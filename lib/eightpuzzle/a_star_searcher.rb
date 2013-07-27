@@ -4,8 +4,9 @@ module EightPuzzle
   class AStarSearcher
     attr_reader :solved_puzzle, :nodes_searched
 
-    def initialize(puzzle)
+    def initialize(puzzle, priority_calculator=nil)
       @start = puzzle
+      @priority_calculator = priority_calculator
       @goal = Puzzle.new(GOAL_STATE)
       @solved_puzzle = nil
 
@@ -42,7 +43,9 @@ module EightPuzzle
     def open_successors(node)
       node.moves.each do |move|
         new_node = node.move(move)
-        @opened.push(new_node, calculate_a_star_priority(new_node)) unless @closed.include?(new_node)
+        unless @closed.include?(new_node)
+          @opened.push(new_node, @priority_calculator.call(new_node))
+        end
       end
     end
 

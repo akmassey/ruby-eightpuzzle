@@ -10,6 +10,5 @@ module EightPuzzle
 
       puzzle
     end
-
   end
 end

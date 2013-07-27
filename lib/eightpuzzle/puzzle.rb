@@ -1,5 +1,9 @@
+require_relative './priority_calculators'
+
 module EightPuzzle
   class Puzzle
+    extend EightPuzzle::PriorityCalculators
+
     attr_reader :state, :parent
 
     def initialize(state, parent=nil)
@@ -59,14 +63,14 @@ module EightPuzzle
     def move(direction)
       raise "Impossible move" unless moves.include?(direction)
 
-      Puzzle.new(create_state_from_move_direction(direction), self)
+      Puzzle.new(next_state_from_move(direction), self)
     end
 
     # Performs an in-place move on self based on the direction
     def move!(direction)
       raise "Impossible move" unless moves.include?(direction)
 
-      @state = create_state_from_move_direction(direction)
+      @state = next_state_from_move(direction)
 
       self
     end
@@ -84,117 +88,29 @@ module EightPuzzle
     def manhattan_distance
       heuristic_value = 0
 
-      position = find_position('1')
-      if (position == 1)
-        heuristic_value += 0
-      elsif (position == 2 or position == 4)
-        heuristic_value += 1
-      elsif (position == 3 or position == 5 or position == 7)
-        heuristic_value += 2
-      elsif (position == 6 or position == 8)
-        heuristic_value += 3
-      elsif (position == 9)
-        heuristic_value += 4
-      end
-
-      position = find_position('2')
-      if (position == 2)
-        heuristic_value += 0
-      elsif (position == 1 or position == 3 or position == 5)
-        heuristic_value += 1
-      elsif (position == 4 or position == 6 or position == 8)
-        heuristic_value += 2
-      elsif (position == 7 or position == 9)
-        heuristic_value += 3
-      end
-
-      position = find_position('3')
-      if (position == 3)
-        heuristic_value += 0
-      elsif (position == 2  or position == 6)
-        heuristic_value += 1
-      elsif (position == 1 or position == 5 or position == 9)
-        heuristic_value += 2
-      elsif (position == 4  or position == 8)
-        heuristic_value += 3
-      elsif (position == 7)
-        heuristic_value += 4
-      end
-
-      position = find_position('8')
-      if (position == 4)
-        heuristic_value += 0
-      elsif (position == 1 or position == 7 or position == 5)
-        heuristic_value += 1
-      elsif (position == 2 or position == 8 or position == 6)
-        heuristic_value += 2
-      elsif (position == 3 or position == 9)
-        heuristic_value += 3
-      end
-
-      position = find_position('*')
-      if( position == 5 )
-        heuristic_value += 0
-      elsif (position == 2 or position == 4 or position == 6 or position == 8)
-        heuristic_value += 1
-      elsif (position == 1 or position == 3 or position == 7 or position == 9)
-        heuristic_value += 2
-      end
-
-      position = find_position('4')
-      if (position == 6)
-        heuristic_value += 0
-      elsif (position == 3 or position == 5 or position == 9)
-        heuristic_value += 1
-      elsif (position == 2 or position == 8 or position == 4)
-        heuristic_value += 2
-      elsif (position == 1 or position == 7)
-        heuristic_value += 3
-      end
-
-      position = find_position('7')
-      if (position == 7)
-        heuristic_value += 0
-      elsif (position == 4 or position == 8)
-        heuristic_value += 1
-      elsif (position == 1 or position == 5 or position == 9)
-        heuristic_value += 2
-      elsif (position == 2 or position == 6)
-        heuristic_value += 3
-      elsif (position == 3)
-        heuristic_value += 4
-      end
-
-      position = find_position('6')
-      if (position == 8)
-        heuristic_value += 0
-      elsif (position == 5 or position == 7 or position == 9)
-        heuristic_value += 1
-      elsif (position == 4 or position == 2 or position == 6)
-        heuristic_value += 2
-      elsif (position == 1 or position == 3)
-        heuristic_value += 3
-      end
-
-      position = find_position('5')
-      if (position == 9)
-        heuristic_value += 0
-      elsif (position == 8 or position == 6)
-        heuristic_value += 1
-      elsif (position == 3 or position == 5 or position == 7)
-        heuristic_value += 2
-      elsif (position == 2 or position == 4)
-        heuristic_value += 3
-      elsif (position == 1)
-        heuristic_value += 4
+      EightPuzzle::TILES.each do |t|
+        heuristic_value += (find_row(t) - EightPuzzle.find_goal_row(t)).abs
+        heuristic_value += (find_column(t) - EightPuzzle.find_goal_column(t)).abs
       end
 
       heuristic_value
     end
 
+    def depth
+      depth = 0
+      tmp = @parent
+
+      while tmp
+        depth += 1
+        tmp = tmp.parent
+      end
+
+      depth
+    end
+
     private
 
-    def create_state_from_move_direction(direction)
+    def next_state_from_move(direction)
       new_state = @state.clone
       slider_index = @state.index('*')
 
@@ -213,11 +129,33 @@ module EightPuzzle
         new_state[slider_index + 1] = '*'
       end
 
-      return new_state
+      new_state
     end
 
     def find_position(tile)
       @state.index(tile) + 1
+    end
+
+    def find_row(tile)
+      position = @state.index(tile)
+      if [0,1,2].include?(position)
+        1
+      elsif [3,4,5].include?(position)
+        2
+      else
+        3
+      end
+    end
+
+    def find_column(tile)
+      position = @state.index(tile)
+      if [0,3,6].include?(position)
+        1
+      elsif [1,4,7].include?(position)
+        2
+      else
+        3
+      end
     end
 
   end

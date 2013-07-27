@@ -75,4 +75,20 @@ describe "Puzzle" do
     end
   end
 
+  context "when the puzzle has parents" do
+    it "should have a depth of one if there's only one parent" do
+      p = EightPuzzle::Puzzle.new("567428*31")
+      r = EightPuzzle::Puzzle.new("567*28431", p)
+      r.depth.should eq 1
+    end
+
+    it "should have a depth of two if there are two parents" do
+      p = EightPuzzle::Puzzle.new("567428*31")
+      r = EightPuzzle::Puzzle.new("567*28431", p)
+      q = EightPuzzle::Puzzle.new("5672*8431", r)
+      q.depth.should eq 2
+    end
+
+  end
+
 end

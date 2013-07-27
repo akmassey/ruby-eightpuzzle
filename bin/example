@@ -2,20 +2,27 @@
 
 require_relative '../lib/eightpuzzle'
 
+include EightPuzzle
+
 puts "Generating a puzzle..."
 
-puzzle = EightPuzzle::PuzzleGenerator.make_puzzle(50)
-bfs = EightPuzzle::BreadthFirstSearcher.new(puzzle)
-dfs = EightPuzzle::DepthFirstSearcher.new(puzzle)
-a_star = EightPuzzle::AStarSearcher.new(puzzle)
-manhattan = EightPuzzle::ManhattanSearcher.new(puzzle)
+# puzzle = PuzzleGenerator.make_puzzle(10)
+# puzzle = PuzzleGenerator.make_puzzle(50)
+puzzle = Puzzle.new("*28174365")
 
-strategies = [ bfs, dfs, a_star, manhattan ]
+# bfs = BreadthFirstSearcher.new(puzzle)
+# dfs = DepthFirstSearcher.new(puzzle)
+standard_a_star = AStarSearcher.new(puzzle, Puzzle.out_of_place_priority_calculator)
+hamming = AStarSearcher.new(puzzle, Puzzle.hamming_priority_calculator)
+manhattan = AStarSearcher.new(puzzle, Puzzle.manhattan_priority_calculator)
+
+# strategies = [ bfs, dfs, standard_a_star, manhattan ]
+strategies = [ standard_a_star, hamming, manhattan ]
 
 strategies.each do |strat|
-  solver = EightPuzzle::PuzzleSolver.new(strat)
+  solver = PuzzleSolver.new(strat)
   solver.solve
-  solver.print_solution
+  puts solver.solution
 
   puts "next strategy\n\n\n\n"
 end
