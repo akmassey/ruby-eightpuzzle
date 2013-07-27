@@ -8,7 +8,7 @@ module EightPuzzle
     end
 
     def to_s
-      @state.to_s
+      @state[0..2] + "\n" + @state[3..5] + "\n" + @state[6..8]
     end
 
     def to_pretty_string
@@ -71,6 +71,127 @@ module EightPuzzle
       self
     end
 
+    def tiles_out_of_place
+      tiles = 0
+
+      for i in 0..8
+        tiles +=1 if EightPuzzle::GOAL_STATE[i] != @state[i]
+      end
+
+      tiles
+    end
+
+    def manhattan_distance
+      heuristic_value = 0
+
+      position = find_position('1')
+      if (position == 1)
+        heuristic_value += 0
+      elsif (position == 2 or position == 4)
+        heuristic_value += 1
+      elsif (position == 3 or position == 5 or position == 7)
+        heuristic_value += 2
+      elsif (position == 6 or position == 8)
+        heuristic_value += 3
+      elsif (position == 9)
+        heuristic_value += 4
+      end
+
+      position = find_position('2')
+      if (position == 2)
+        heuristic_value += 0
+      elsif (position == 1 or position == 3 or position == 5)
+        heuristic_value += 1
+      elsif (position == 4 or position == 6 or position == 8)
+        heuristic_value += 2
+      elsif (position == 7 or position == 9)
+        heuristic_value += 3
+      end
+
+      position = find_position('3')
+      if (position == 3)
+        heuristic_value += 0
+      elsif (position == 2  or position == 6)
+        heuristic_value += 1
+      elsif (position == 1 or position == 5 or position == 9)
+        heuristic_value += 2
+      elsif (position == 4  or position == 8)
+        heuristic_value += 3
+      elsif (position == 7)
+        heuristic_value += 4
+      end
+
+      position = find_position('8')
+      if (position == 4)
+        heuristic_value += 0
+      elsif (position == 1 or position == 7 or position == 5)
+        heuristic_value += 1
+      elsif (position == 2 or position == 8 or position == 6)
+        heuristic_value += 2
+      elsif (position == 3 or position == 9)
+        heuristic_value += 3
+      end
+
+      position = find_position('*')
+      if( position == 5 )
+        heuristic_value += 0
+      elsif (position == 2 or position == 4 or position == 6 or position == 8)
+        heuristic_value += 1
+      elsif (position == 1 or position == 3 or position == 7 or position == 9)
+        heuristic_value += 2
+      end
+
+      position = find_position('4')
+      if (position == 6)
+        heuristic_value += 0
+      elsif (position == 3 or position == 5 or position == 9)
+        heuristic_value += 1
+      elsif (position == 2 or position == 8 or position == 4)
+        heuristic_value += 2
+      elsif (position == 1 or position == 7)
+        heuristic_value += 3
+      end
+
+      position = find_position('7')
+      if (position == 7)
+        heuristic_value += 0
+      elsif (position == 4 or position == 8)
+        heuristic_value += 1
+      elsif (position == 1 or position == 5 or position == 9)
+        heuristic_value += 2
+      elsif (position == 2 or position == 6)
+        heuristic_value += 3
+      elsif (position == 3)
+        heuristic_value += 4
+      end
+
+      position = find_position('6')
+      if (position == 8)
+        heuristic_value += 0
+      elsif (position == 5 or position == 7 or position == 9)
+        heuristic_value += 1
+      elsif (position == 4 or position == 2 or position == 6)
+        heuristic_value += 2
+      elsif (position == 1 or position == 3)
+        heuristic_value += 3
+      end
+
+      position = find_position('5')
+      if (position == 9)
+        heuristic_value += 0
+      elsif (position == 8 or position == 6)
+        heuristic_value += 1
+      elsif (position == 3 or position == 5 or position == 7)
+        heuristic_value += 2
+      elsif (position == 2 or position == 4)
+        heuristic_value += 3
+      elsif (position == 1)
+        heuristic_value += 4
+      end
+
+      heuristic_value
+    end
+
     private
 
     def create_state_from_move_direction(direction)
@@ -94,5 +215,10 @@ module EightPuzzle
 
       return new_state
     end
+
+    def find_position(tile)
+      @state.index(tile) + 1
+    end
+
   end
 end

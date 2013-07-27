@@ -5,6 +5,8 @@ require_relative "./eightpuzzle/puzzle_generator"
 require_relative "./eightpuzzle/puzzle_solver"
 require_relative "./eightpuzzle/breadth_first_searcher"
 require_relative "./eightpuzzle/depth_first_searcher"
+require_relative "./eightpuzzle/a_star_searcher"
+require_relative "./eightpuzzle/manhattan_searcher"
 
 require 'set'
 

@@ -1,4 +1,4 @@
-#! /usr/bin/env ruby -w
+#! /usr/bin/env ruby
 
 require_relative '../lib/eightpuzzle'
 
@@ -7,8 +7,10 @@ puts "Generating a puzzle..."
 puzzle = EightPuzzle::PuzzleGenerator.make_puzzle(50)
 bfs = EightPuzzle::BreadthFirstSearcher.new(puzzle)
 dfs = EightPuzzle::DepthFirstSearcher.new(puzzle)
+a_star = EightPuzzle::AStarSearcher.new(puzzle)
+manhattan = EightPuzzle::ManhattanSearcher.new(puzzle)
 
-strategies = [ bfs, dfs ]
+strategies = [ bfs, dfs, a_star, manhattan ]
 
 strategies.each do |strat|
   solver = EightPuzzle::PuzzleSolver.new(strat)

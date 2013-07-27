@@ -66,7 +66,7 @@ describe "Puzzle" do
   context "the goal state" do
     it "should be used to initialize the goal puzzle" do
       g = EightPuzzle::Puzzle.new(EightPuzzle::GOAL_STATE)
-      g.to_s.should eq EightPuzzle::GOAL_STATE
+      g.state.should eq EightPuzzle::GOAL_STATE
     end
 
     it "should have the slider in the center of the puzzle" do
